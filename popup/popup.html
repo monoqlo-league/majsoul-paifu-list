@@ -18,7 +18,7 @@
     <details id="bulk" class="bulk">
       <summary>対局一覧のCSVから牌譜を取得</summary>
       <p class="bulk-note">
-        対局一覧のCSVを読み込んで「取得を始める」を押すと、そこに載っている牌譜を順に取得する。雀魂にログインしたタブを開いたままにしておく。1件ごとに、下の待機時間(5〜600秒)をあけて取得し、このポップアップを閉じても続く。雀魂で牌譜を開いても、その牌譜は取り込まない。
+        対局一覧のCSVを読み込んで「取得を始める」を押すと、そこに載っている牌譜を順に取得する。雀魂にログインしたタブを開いたままにしておく。1件ごとに、下の待機時間(1〜600秒)をあけて取得し、このポップアップを閉じても続く。雀魂で牌譜を開いても、その牌譜は取り込まない。
       </p>
       <div class="bulk-files">
         <button id="bulk-load-list" type="button">対局一覧のCSVを読み込む</button>
@@ -40,7 +40,7 @@
         <button id="bulk-resume" type="button" hidden>残りを再開</button>
         <label class="field">
           <span>1件ごとの待機</span>
-          <input id="bulk-interval" class="bulk-interval" type="number" min="5" max="600" step="1" value="20" inputmode="numeric" />
+          <input id="bulk-interval" class="bulk-interval" type="number" min="1" max="600" step="1" value="5" inputmode="numeric" />
           <span>秒</span>
         </label>
         <span id="bulk-message" class="bulk-message" role="status"></span>

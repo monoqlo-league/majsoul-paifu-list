@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "雀魂 牌譜スタッツ出力 リスト取得版",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "対局一覧のCSVに載っている牌譜を、間隔をあけて順に取得し、和了・放銃・立直・副露の成績を集計のCSVにする非公式の拡張機能。雀魂で牌譜を開いても取り込まない。",
   "permissions": [
     "storage",

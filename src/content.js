@@ -12,8 +12,8 @@
 
   // 一括取得で、牌譜の要求と要求の間にあける時間(秒)。ポップアップの入力欄で変えられる。
   // 下限は、入力の誤りで雀魂に続けざまに要求を送ってしまわないためのもの。
-  const DEFAULT_INTERVAL_SEC = 20;
-  const MIN_INTERVAL_SEC = 5;
+  const DEFAULT_INTERVAL_SEC = 5;
+  const MIN_INTERVAL_SEC = 1;
   const MAX_INTERVAL_SEC = 600;
   const RESPONSE_TIMEOUT_MS = 20000;
   // 牌譜の中身を読めない失敗が続けてこの回数起きたら、同じ失敗を繰り返さないよう全体を止める。

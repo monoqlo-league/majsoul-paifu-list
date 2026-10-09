@@ -1,6 +1,6 @@
 {
   "name": "majsoul-paifu-list",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "対局一覧のCSVに載っている雀魂の牌譜を順に取得し、成績を集計のCSVにするChrome拡張機能",
   "license": "Apache-2.0",
