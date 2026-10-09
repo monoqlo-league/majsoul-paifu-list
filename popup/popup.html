@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>牌譜スタッツ出力 リスト取得版</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="top">
+      <h1>牌譜スタッツ出力<span class="edition">リスト取得版</span></h1>
+      <p id="count" class="count"></p>
+      <button id="open-tab" class="quiet" type="button">広い画面で開く</button>
+    </header>
+
+    <p id="status" class="status" hidden></p>
+
+    <details id="bulk" class="bulk">
+      <summary>対局一覧のCSVから牌譜を取得</summary>
+      <p class="bulk-note">
+        対局一覧のCSVを読み込んで「取得を始める」を押すと、そこに載っている牌譜を順に取得する。雀魂にログインしたタブを開いたままにしておく。1件ごとに、下の待機時間(5〜600秒)をあけて取得し、このポップアップを閉じても続く。雀魂で牌譜を開いても、その牌譜は取り込まない。
+      </p>
+      <div class="bulk-files">
+        <button id="bulk-load-list" type="button">対局一覧のCSVを読み込む</button>
+        <button id="bulk-load-exported" type="button">出力済みのCSVを読み込む</button>
+        <input id="bulk-list-file" type="file" accept=".csv,text/csv" hidden />
+        <input id="bulk-exported-file" type="file" accept=".csv,text/csv" hidden />
+      </div>
+      <p class="bulk-note">
+        対局一覧のCSVは「牌譜リンク」の列を読む。出力済みのCSVは以前に保存した集計のCSV(…-summary.csv)で、そこに載っている対局は取得せず、次に保存する集計のCSVにそのまま書き込む。ファイルを選ぶ画面でこのポップアップが閉じてしまう場合は、「広い画面で開く」から行う。
+      </p>
+      <p id="bulk-list" class="bulk-list"></p>
+      <p id="bulk-exported" class="bulk-exported" hidden>
+        <span id="bulk-exported-text"></span>
+        <button id="bulk-exported-clear" type="button">解除</button>
+      </p>
+      <div class="bulk-actions">
+        <button id="bulk-start" class="primary" type="button">取得を始める</button>
+        <button id="bulk-stop" type="button" hidden>止める</button>
+        <button id="bulk-resume" type="button" hidden>残りを再開</button>
+        <label class="field">
+          <span>1件ごとの待機</span>
+          <input id="bulk-interval" class="bulk-interval" type="number" min="5" max="600" step="1" value="20" inputmode="numeric" />
+          <span>秒</span>
+        </label>
+        <span id="bulk-message" class="bulk-message" role="status"></span>
+      </div>
+      <div id="bulk-progress" hidden>
+        <p id="bulk-summary" class="bulk-summary"></p>
+        <ul id="bulk-errors" class="bulk-errors"></ul>
+      </div>
+    </details>
+
+    <section id="empty" class="empty" hidden>
+      <p class="empty-lead">まだ牌譜を取得していません。</p>
+      <ol>
+        <li>雀魂のページを再読み込みし、ログインしておく(この拡張機能を入れた直後だけ)。</li>
+        <li>上の欄で「対局一覧のCSVを読み込む」を押し、取得したい対局一覧のCSVを選ぶ。</li>
+        <li>「取得を始める」を押す。終わったら「CSVを保存」で集計のCSVにする。</li>
+      </ol>
+    </section>
+
+    <main id="main" hidden>
+      <div class="controls">
+        <label class="field">
+          <span>対象</span>
+          <select id="target"></select>
+        </label>
+      </div>
+
+      <div id="table-wrap" class="table-wrap" tabindex="0"></div>
+
+      <div class="actions">
+        <button id="copy" class="primary" type="button">表をコピー</button>
+        <button id="save" type="button">CSVを保存</button>
+        <label class="check">
+          <input id="header" type="checkbox" checked />
+          <span>コピーに見出し行を含める</span>
+        </label>
+        <span id="done" class="done" role="status"></span>
+        <button id="remove" class="danger" type="button"></button>
+      </div>
+
+      <details class="notes">
+        <summary>数え方</summary>
+        <dl>
+          <dt>和了点・放銃点</dt>
+          <dd>手の点数。本場と供託は含まない。</dd>
+          <dt>巡目</dt>
+          <dd>立直は宣言牌が本人の何打目か。ツモ和了は本人の打牌数+1。ロン和了は放銃牌が放銃者の何打目か。</dd>
+          <dt>放銃数</dt>
+          <dd>局単位。ダブロンは1回と数え、点数は両方を足す。</dd>
+          <dt>立直数</dt>
+          <dd>成立した立直だけ。宣言牌でロンされたものは「宣言牌放銃」に数える。</dd>
+          <dt>先制・追っかけ</dt>
+          <dd>他家の立直が成立していなければ先制、していれば追っかけ。</dd>
+          <dt>立直後放銃</dt>
+          <dd>自分の立直が成立した後の放銃。宣言牌での放銃は含まない。</dd>
+          <dt>副露</dt>
+          <dd>チー・ポン・大明槓。暗槓・加槓・北抜きは数えない。副露和了は副露した局での和了。</dd>
+          <dt>ドラ・赤ドラ・裏ドラ</dt>
+          <dd>和了時に役として付いた枚数。役満の和了では0になる。</dd>
+          <dt>最大連荘数</dt>
+          <dd>親を続けた局数の最大。和了でも聴牌流局でも、次の局も親なら続いたと数える。親を3局続けたら3、1局で流れたら1。</dd>
+          <dt>最高和了点</dt>
+          <dd>その対局でいちばん高かった和了点。和了が無ければ空欄。</dd>
+          <dt>役の列</dt>
+          <dd>その役が付いた和了の回数。役満の和了では役満の役だけを数える。</dd>
+          <dt>ダマ和了</dt>
+          <dd>立直も副露もしていない和了。</dd>
+          <dt>宣言牌放銃</dt>
+          <dd>立直の宣言牌でロンされた回数。立直数と立直後放銃には含めない。</dd>
+        </dl>
+      </details>
+    </main>
+
+    <script src="../src/fans.js"></script>
+    <script src="../src/tables.js"></script>
+    <script src="../src/ids.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

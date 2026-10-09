@@ -1,0 +1,436 @@
+/* 配色は麻雀卓から取った: 卓のフェルト、牌の表、牌の背、「中」の赤。 */
+:root {
+  --felt: #1f5e4a;
+  --felt-deep: #154335;
+  --tile: #fbfbf7;
+  --tile-edge: #dcdccf;
+  --tile-back: #e0a22e;
+  --chun: #b3261e;
+  --ink: #1b2420;
+  --ink-soft: #5b6660;
+  --band: #eef3ef;
+  --row-alt: #f4f5f0;
+  --focus: #0b57d0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --felt: #2c7a61;
+    --felt-deep: #1b4c3d;
+    --tile: #18201d;
+    --tile-edge: #33403a;
+    --tile-back: #e6ae45;
+    --chun: #f2877f;
+    --ink: #e7ece8;
+    --ink-soft: #9fada6;
+    --band: #22302a;
+    --row-alt: #1d2723;
+    --focus: #8ab4f8;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+/* display を指定した要素でも hidden 属性が効くようにする。 */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  width: 780px;
+  background: var(--tile);
+  color: var(--ink);
+  font: 13px/1.5 "BIZ UDPGothic", "Yu Gothic UI", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+body.wide {
+  width: auto;
+}
+
+button,
+select,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* 卓の縁: 緑のフェルトに、牌の背の色の細い帯を1本。 */
+.top {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--felt-deep);
+  border-bottom: 3px solid var(--tile-back);
+  color: #fff;
+}
+
+.top h1 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.top .edition {
+  margin-left: 8px;
+  padding: 1px 7px;
+  border: 1px solid var(--tile-back);
+  border-radius: 3px;
+  color: var(--tile-back);
+  font-size: 11px;
+  letter-spacing: 0;
+  vertical-align: 1px;
+}
+
+.count {
+  margin: 0;
+  flex: 1;
+  color: #d5e4dc;
+}
+
+.top .quiet {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: transparent;
+  color: #fff;
+}
+
+.status {
+  margin: 0;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--tile-edge);
+  color: var(--chun);
+}
+
+.bulk {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--tile-edge);
+}
+
+.bulk summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.bulk-note {
+  margin: 6px 0;
+  color: var(--ink-soft);
+}
+
+.bulk-list {
+  margin: 0 0 6px;
+  padding: 4px 8px;
+  border-left: 3px solid var(--felt);
+  background: var(--band);
+  font-weight: 700;
+}
+
+.bulk-list.is-none {
+  border-left-color: var(--tile-edge);
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.bulk-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.bulk-files button,
+.bulk-exported button {
+  padding: 4px 12px;
+  border: 1px solid var(--tile-edge);
+  border-radius: 4px;
+  background: var(--tile);
+  cursor: pointer;
+}
+
+.bulk-exported {
+  margin: 0 0 6px;
+  padding: 4px 8px;
+  border-left: 3px solid var(--tile-back);
+  background: var(--band);
+}
+
+.bulk-exported button {
+  margin-left: 8px;
+  padding: 1px 8px;
+}
+
+.bulk-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 8px;
+}
+
+.bulk-actions button {
+  padding: 4px 12px;
+  border: 1px solid var(--tile-edge);
+  border-radius: 4px;
+  background: var(--tile);
+  cursor: pointer;
+}
+
+.bulk-actions .primary {
+  border-color: var(--felt);
+  background: var(--felt);
+  color: #fff;
+  font-weight: 700;
+}
+
+.bulk-interval {
+  width: 5em;
+  padding: 3px 6px;
+  border: 1px solid var(--tile-edge);
+  border-radius: 4px;
+  background: var(--tile);
+  text-align: right;
+}
+
+.bulk-actions button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.bulk-message {
+  color: var(--ink-soft);
+}
+
+.bulk-message.is-error {
+  color: var(--chun);
+}
+
+.bulk-summary {
+  margin: 8px 0 0;
+  font-weight: 700;
+}
+
+.bulk-errors {
+  margin: 4px 0 0;
+  padding-left: 1.4em;
+  color: var(--chun);
+}
+
+.bulk-errors:empty {
+  display: none;
+}
+
+.empty {
+  padding: 20px 14px 24px;
+}
+
+.empty-lead {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.empty ol {
+  margin: 0;
+  padding-left: 1.6em;
+  color: var(--ink-soft);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 10px 14px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+select {
+  max-width: 260px;
+  padding: 4px 6px;
+  border: 1px solid var(--tile-edge);
+  border-radius: 4px;
+  background: var(--tile);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.check input {
+  accent-color: var(--felt);
+}
+
+.table-wrap {
+  max-height: 330px;
+  margin: 0 14px;
+  overflow: auto;
+  border: 1px solid var(--tile-edge);
+}
+
+body.wide .table-wrap {
+  max-height: none;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  white-space: nowrap;
+}
+
+th,
+td {
+  padding: 3px 9px;
+  border-bottom: 1px solid var(--tile-edge);
+  text-align: left;
+}
+
+td.num,
+th.num {
+  text-align: right;
+}
+
+thead th {
+  position: sticky;
+  background: var(--band);
+  font-weight: 700;
+  z-index: 1;
+}
+
+thead tr.columns th {
+  top: 0;
+}
+
+/* 集計表だけ、4分類の見出しを列名の上に重ねる。 */
+thead tr.groups th {
+  top: 0;
+  background: var(--felt);
+  color: #fff;
+  letter-spacing: 0.2em;
+  border-bottom: 0;
+}
+
+thead tr.groups th:empty {
+  background: var(--band);
+}
+
+thead tr.groups + tr.columns th {
+  top: 26px;
+}
+
+th.group-start,
+td.group-start {
+  border-left: 2px solid var(--felt);
+}
+
+tbody td {
+  background: var(--tile);
+}
+
+tbody tr:nth-child(even) td {
+  background: var(--row-alt);
+}
+
+td.game-id {
+  max-width: 8.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.wide td.game-id {
+  max-width: none;
+}
+
+td.pin,
+th.pin {
+  position: sticky;
+  left: 0;
+  border-right: 1px solid var(--tile-edge);
+}
+
+thead th.pin {
+  z-index: 2;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 10px 14px;
+}
+
+.actions button,
+.top .quiet {
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.actions button {
+  border: 1px solid var(--tile-edge);
+  background: var(--tile);
+}
+
+.actions .primary {
+  border-color: var(--felt);
+  background: var(--felt);
+  color: #fff;
+  font-weight: 700;
+}
+
+.actions .danger {
+  margin-left: auto;
+  border-color: var(--chun);
+  color: var(--chun);
+}
+
+.done {
+  color: var(--felt);
+  font-weight: 700;
+}
+
+.notes {
+  padding: 0 14px 12px;
+  color: var(--ink-soft);
+}
+
+.notes summary {
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.notes dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 2px 14px;
+  margin: 6px 0 0;
+}
+
+.notes dt {
+  font-weight: 700;
+}
+
+.notes dd {
+  margin: 0;
+}

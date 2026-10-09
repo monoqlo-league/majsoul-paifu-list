@@ -1,0 +1,11 @@
+雀魂 牌譜スタッツ出力 リスト取得版
+
+牌譜の応答をWebSocketの通し番号で見分ける方法は、次のソフトウェアを参考にした。
+  MahjongSoul-review-supporter (https://github.com/kbkn3/MahjongSoul-review-supporter)
+  Apache License 2.0
+
+tools/liqi.json、tools/fan.json は同リポジトリに含まれるもので、
+元は雀魂(Cat Food Studio / Yostar)の通信定義である。
+
+開発時のテストには同リポジトリの牌譜データ(test/fixtures/record-raw.base64.txt)を使うが、
+配布用のzipには test/ を含めていない。
